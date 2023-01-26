@@ -8,7 +8,7 @@ interface IInputLoginProps {
     onPressEnter?: () => void;
 }
 
-export const InputLogin = React.forwardRef<HTMLInputElement, IInputLoginProps>((props, ref) => {
+export const InputLogin = React.forwardRef<HTMLInputElement, IInputLoginProps >((props, ref) => {
 
     return (
         <label>
