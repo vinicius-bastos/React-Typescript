@@ -1,5 +1,5 @@
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
-import { UsuarioLogadoContext } from "../../shared/contexts";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useUsuarioLogado } from "../../shared/hooks";
 import { ButtonLogin } from "./components/ButtonLogin";
 import { InputLogin } from "./components/InputLogin";
 
@@ -8,7 +8,7 @@ export const Login = () => {
     const inputPasswordRef = useRef<HTMLInputElement>(null);
 
     
-    const usuarioLogadoContext = useContext(UsuarioLogadoContext);
+    const { nomeDoUsuario } = useUsuarioLogado();
 
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -28,7 +28,7 @@ export const Login = () => {
 
                 <p>Quantidade de caracteres no email: {emailLength}</p>
 
-                <p>{usuarioLogadoContext.nomeDoUsuario}</p>
+                <p>{nomeDoUsuario}</p>
 
                 <InputLogin
                  label="Email"
