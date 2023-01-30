@@ -7,13 +7,13 @@ export const Dashboard = () => {
 
     useEffect(() => {
         TarefasService.getAll()
-        .then((result) => {
-            if (result instanceof ApiException) {
-                alert(result.message);
-            } else {
-                setLista(result);
-            }
-        });
+            .then((result) => {
+                if (result instanceof ApiException) {
+                    alert(result.message);
+                } else {
+                    setLista(result);
+                }
+            });
     }, []);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
@@ -22,24 +22,63 @@ export const Dashboard = () => {
 
             const value = e.currentTarget.value;
 
+            if (lista.some((listItem) => listItem.title === value)) {
+                alert(`Tarefa com nome ${value} já cadastrada!`);
+                return;
+            } 
+
             e.currentTarget.value = '';
 
-            // setLista([...lista, e.currentTarget.value]);
-
-            
-            setLista((oldLista) => {
-
-                if (oldLista.some((listItem) => listItem.title === value)) return oldLista;
-
-                return [
-                    ...oldLista,
-                    {
-                        title: value,
-                        isCompleted: false,
-                    }]
-            });
+            TarefasService.create({ title: value, isCompleted: false })
+                .then((result) => {
+                    if (result instanceof ApiException) {
+                        alert(result.message);
+                    } else {
+                        setLista((oldLista) => [...oldLista, result]);
+                    }
+                });
         }
-    }, []);
+    }, [lista]);
+
+    const handleToggleComplete = useCallback((id: number) => {
+
+        const tarefaToUpdate = lista.find((tarefa) => tarefa.id === id);
+
+        if (tarefaToUpdate === undefined) return;
+
+        TarefasService.updateById(id, {
+            ...tarefaToUpdate,
+            isCompleted: !tarefaToUpdate.isCompleted
+        }).then((result) => {
+            if (result instanceof ApiException) {
+                alert(result.message);
+            } else {
+                setLista(oldLista => {
+                    return oldLista.map(oldListItem => {
+                        if (oldListItem.id === id) return result;
+
+                        return oldListItem;
+                    });
+                });
+            }
+        });
+
+    }, [lista])
+
+    const handleDelete = useCallback((id: number) => {
+        TarefasService.deleteById(id).then((result) => {
+            if (result instanceof ApiException) {
+                alert(result.message);
+            } else {
+                // setLista(oldLista => {
+                //     return oldLista.filter(oldListItem => oldListItem.id !== id);
+                // });
+                
+            }
+        });
+
+    }, [])
+
 
     return (
         <div>
@@ -57,19 +96,11 @@ export const Dashboard = () => {
                         <input
                             type='checkbox'
                             checked={listItem.isCompleted}
-                            onChange={() => {
-                                setLista(oldLista => {
-                                    return oldLista.map(oldListItem => {
-                                        const newIsCompleted = oldListItem.title === listItem.title? !oldListItem.isCompleted : oldListItem.isCompleted;
-                                        return {
-                                            ...oldListItem,
-                                            isCompleted: newIsCompleted
-                                        };
-                                    });
-                                });
-                            }}
+                            onChange={() => handleToggleComplete(listItem.id)}
                         />
                         {listItem.title}
+
+                        <button onClick={() => handleDelete(listItem.id)}>Apagar</button>
                     </li>;
                 })}
             </ul>

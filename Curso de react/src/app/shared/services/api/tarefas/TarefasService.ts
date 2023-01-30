@@ -2,7 +2,7 @@ import { Api } from "../ApiConfig";
 import { ApiException } from "../ApiException";
 
 export interface ITarefa {
-    id?: number;
+    id: number;
     title: string;
     isCompleted: boolean;
 }
@@ -30,7 +30,7 @@ const getById = async (id: number): Promise<ITarefa | ApiException> => {
 
 };
 
-const create = async (dataToCreate: Omit<ITarefa, 'id'>): Promise<ITarefa[ ] | ApiException> => {
+const create = async (dataToCreate: Omit<ITarefa, 'id'>): Promise<ITarefa | ApiException> => {
 
     try {
         const { data } = await Api().post<any>('/tarefas', dataToCreate);
@@ -55,7 +55,7 @@ const updateById = async (id: number, dataToUpdate: ITarefa): Promise<ITarefa | 
 const deleteById = async (id: number): Promise<undefined | ApiException> => {
 
     try {
-        await Api().get(`/tarefas/${id}`);
+        await Api().delete(`/tarefas/${id}`);
         return undefined;
     } catch (error: any) {
         return new ApiException(error.message || 'Erro ao apagar o registro.');
