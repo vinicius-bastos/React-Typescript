@@ -1,9 +1,10 @@
+import Button from "@mui/material/Button";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
     {
         path: '/pagina-inicial',
-        element: <div>rota teste</div>
+        element: <Button>Teste</Button>
     },
     {
         path: '*',
