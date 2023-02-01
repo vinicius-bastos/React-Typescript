@@ -7,6 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Box } from '@mui/system';
 import { ReactNode } from 'react';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import avatar from '../../components/menu-lateral/img/img-perfil.jpeg';
 import { useDrawerContext } from '../../contexts';
 
@@ -14,11 +15,41 @@ interface IMenuLateralProps {
   children: ReactNode;
 }
 
+interface IListItemProps {
+  label: string;
+  icon: string;
+  to: string;
+  onClick: (() => void) | undefined;
+}
+
+const ListItemLink: React.FC<IListItemProps> = ({ label, icon, to, onClick }) => {
+
+  const navigate = useNavigate();
+
+  const resolvedPath = useResolvedPath(to);
+  const match = useMatch({ path: resolvedPath.pathname, end: false });
+
+  const handleClick = () => {
+    navigate(to);
+    onClick?.();
+  };
+
+  return (
+    <ListItemButton onClick={handleClick} selected={!!match}>
+      <ListItemIcon>
+        <Icon>{icon}</Icon>
+      </ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItemButton>
+  );
+
+};
+
 export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
+  const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext();
 
   return (
     <>
@@ -33,12 +64,15 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
 
           <Box flex={1}>
             <List component="nav">
-              <ListItemButton>
-                <ListItemIcon>
-                  <Icon>home</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Pagina Inicial" />
-              </ListItemButton>
+              {drawerOptions.map(drawerOptions => (
+                <ListItemLink
+                  key={drawerOptions.path}
+                  label={drawerOptions.label}
+                  icon={drawerOptions.icon}
+                  to={drawerOptions.path}
+                  onClick={smDown ? toggleDrawerOpen : undefined}
+                />
+              ))}
             </List>
           </Box>
 
