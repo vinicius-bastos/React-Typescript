@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { Box } from '@mui/system';
 import { ReactNode } from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
-import avatar from '../../components/menu-lateral/img/img-perfil.jpeg';
 import { useDrawerContext } from '../../contexts';
 
 interface IMenuLateralProps {
@@ -57,7 +56,7 @@ export const MenuLateral: React.FC<IMenuLateralProps> = ({ children }) => {
         <Box width={theme.spacing(28)} height='100%' display='flex' flexDirection='column'>
 
           <Box width='100%' height={theme.spacing(20)} display='flex' alignItems='center' justifyContent='center'>
-            <Avatar src={avatar} sx={{ height: theme.spacing(12), width: theme.spacing(12) }} />
+            <Avatar src='/images/img-perfil.jpeg' sx={{ height: theme.spacing(12), width: theme.spacing(12) }} />
           </Box>
 
           <Divider />
