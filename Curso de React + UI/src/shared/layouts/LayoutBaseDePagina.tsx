@@ -1,4 +1,4 @@
-import { Typography, useTheme, IconButton, Icon, useMediaQuery, Theme } from '@mui/material';
+import { Typography, useTheme, IconButton, Icon, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDrawerContext } from '../contexts';
 
